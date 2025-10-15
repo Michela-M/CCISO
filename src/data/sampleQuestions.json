@@ -1,0 +1,22 @@
+[
+    {
+        "question": "What is the process by which plants make their own food using sunlight?",
+        "options": [
+            "Respiration",
+            "Photosynthesis",
+            "Fermentation",
+            "Transpiration"
+        ],
+        "correctAnswerIndex": 1
+    },
+    {
+        "question": "Which programming language is primarily used for developing Android apps?",
+        "options": ["Swift", "Java", "Python", "C++"],
+        "correctAnswerIndex": 1
+    },
+    {
+        "question": "In which year did the Berlin Wall fall?",
+        "options": ["1989", "1975", "1991", "1961"],
+        "correctAnswerIndex": 0
+    }
+]
