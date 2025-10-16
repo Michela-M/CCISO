@@ -2,7 +2,6 @@ import React from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CsvUploader from "../components/CsvUploader";
-import { fetchLatestQuiz } from "../utils/fetchLatestQuiz";
 
 const Home = () => {
     const navigate = useNavigate();
