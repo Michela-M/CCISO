@@ -4,6 +4,7 @@ import { expect } from "vitest";
 import Home from "../views/Home";
 import { screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import "@testing-library/jest-dom";
 
 test("renders Home component", () => {
     render(
