@@ -2,17 +2,29 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
+
 import CsvUploader from "../components/CsvUploader";
 
 const Home = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
+            if (currentUser) {
+                const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+                if (userDoc.exists()) {
+                    const role = userDoc.data().role;
+                    setIsAdmin(role === "admin");
+                }
+            } else {
+                setIsAdmin(false);
+            }
         });
         return () => unsubscribe();
     }, []);
@@ -24,6 +36,8 @@ const Home = () => {
     const handleLogout = async () => {
         await signOut(auth);
         setUser(null);
+        setIsAdmin(false);
+        navigate("/");
     };
 
     return (
@@ -79,7 +93,7 @@ const Home = () => {
                     <Button variant="contained" onClick={handleStartQuiz}>
                         Start quiz
                     </Button>
-                    <CsvUploader />
+                    {isAdmin && <CsvUploader />}
                 </Box>
             </Box>
         </Box>

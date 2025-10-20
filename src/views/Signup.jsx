@@ -15,6 +15,8 @@ import {
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { auth, googleProvider } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../firebase";
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 
 const Signup = () => {
@@ -34,8 +36,21 @@ const Signup = () => {
             return;
         }
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            setSnackbarMessage("Account created successfully!");
+            const userCredential = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password,
+            );
+            const user = userCredential.user;
+
+            // Create Firestore user document
+            await setDoc(doc(db, "users", user.uid), {
+                email: user.email,
+                role: "user", // manually change to "admin" in Firebase Console if needed
+            });
+
+            // Show success and navigate
+            setSnackbarMessage("🎉 Account created successfully!");
             setSnackbarOpen(true);
             setTimeout(() => {
                 navigate("/");
