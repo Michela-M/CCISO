@@ -3,25 +3,38 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom";
+import { vi } from "vitest";
 
-// Mock Firebase globally for all tests
-vi.mock("../firebase", async () => {
-    return {
-        auth: {},
-        db: {},
-    };
-});
+// --- Mock Firebase core ---
+vi.mock("firebase/app", () => ({
+    initializeApp: vi.fn(() => ({})), // fake app instance
+}));
 
-vi.mock("firebase/auth", async () => {
-    return {
-        onAuthStateChanged: vi.fn(),
-        signOut: vi.fn(),
-    };
-});
+// --- Mock Firebase Auth ---
+vi.mock("firebase/auth", () => ({
+    getAuth: vi.fn(() => ({})),
+    onAuthStateChanged: vi.fn(),
+    signOut: vi.fn(),
+}));
 
-vi.mock("firebase/firestore", async () => {
-    return {
-        getDoc: vi.fn(),
-        doc: vi.fn(),
-    };
-});
+// --- Mock Firebase Firestore ---
+vi.mock("firebase/firestore", () => ({
+    getFirestore: vi.fn(() => ({})),
+    getDoc: vi.fn(),
+    doc: vi.fn(),
+}));
+
+// --- Mock Firebase Storage (optional, if used) ---
+vi.mock("firebase/storage", () => ({
+    getStorage: vi.fn(() => ({})),
+    ref: vi.fn(),
+    uploadBytes: vi.fn(),
+    getDownloadURL: vi.fn(),
+}));
+
+// --- Mock your local firebase.js wrapper ---
+vi.mock("../firebase", () => ({
+    auth: {},
+    db: {},
+    storage: {},
+}));
