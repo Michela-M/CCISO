@@ -58,9 +58,7 @@ function Results() {
         >
             <Card sx={{ minWidth: 600 }}>
                 <CardContent>
-                    <Typography variant="h5" component="div">
-                        Quiz completed!
-                    </Typography>
+                    <Typography variant="h5">Quiz completed!</Typography>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
                         Score: {correctAnswers}/{totalQuestions}
                     </Typography>
@@ -69,7 +67,6 @@ function Results() {
                     </Box>
                 </CardContent>
                 <CardActions sx={{ display: "flex", justifyContent: "center" }}>
-                    {" "}
                     <Button variant="outlined" href="/">
                         Home
                     </Button>
