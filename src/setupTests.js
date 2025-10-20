@@ -1,30 +1,26 @@
-// jest-dom adds custom jest matchers for asserting on DOM nodes.
-// allows you to do things like:
-// expect(element).toHaveTextContent(/react/i)
-// learn more: https://github.com/testing-library/jest-dom
-import "@testing-library/jest-dom";
+// src/setupTests.js
 import { vi } from "vitest";
+import "@testing-library/jest-dom";
 
-// --- Mock Firebase core ---
+// --- MOCK FIREBASE MODULES ---
+// Must be defined BEFORE anything imports firebase.js
+
 vi.mock("firebase/app", () => ({
-    initializeApp: vi.fn(() => ({})), // fake app instance
+    initializeApp: vi.fn(() => ({})), // fake app
 }));
 
-// --- Mock Firebase Auth ---
 vi.mock("firebase/auth", () => ({
     getAuth: vi.fn(() => ({})),
     onAuthStateChanged: vi.fn(),
     signOut: vi.fn(),
 }));
 
-// --- Mock Firebase Firestore ---
 vi.mock("firebase/firestore", () => ({
-    getFirestore: vi.fn(() => ({})),
+    getFirestore: vi.fn(() => ({})), // <-- this fixes your current error
     getDoc: vi.fn(),
     doc: vi.fn(),
 }));
 
-// --- Mock Firebase Storage (optional, if used) ---
 vi.mock("firebase/storage", () => ({
     getStorage: vi.fn(() => ({})),
     ref: vi.fn(),
@@ -32,7 +28,7 @@ vi.mock("firebase/storage", () => ({
     getDownloadURL: vi.fn(),
 }));
 
-// --- Mock your local firebase.js wrapper ---
+// If your app imports a local firebase wrapper:
 vi.mock("../firebase", () => ({
     auth: {},
     db: {},
