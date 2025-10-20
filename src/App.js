@@ -5,6 +5,8 @@ import QuestionPage from "./views/QuestionPage";
 import sampleQuestions from "./data/sampleQuestions.json";
 import Results from "./views/Results";
 import LoadingScreen from "./views/LoadingScreen";
+import Login from "./views/Login";
+import Signup from "./views/Signup";
 
 function App() {
     return (
@@ -17,6 +19,8 @@ function App() {
                 />
                 <Route path="/results" element={<Results />} />
                 <Route path="/loading" element={<LoadingScreen />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
             </Routes>
         </Router>
     );
