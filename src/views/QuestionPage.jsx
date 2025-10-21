@@ -13,6 +13,9 @@ import Answers from "../components/Answers";
 import { useNavigate } from "react-router-dom";
 import sampleQuestions from "../data/sampleQuestions.json";
 import { useLocation } from "react-router-dom";
+import { db } from "../firebase";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 function QuizView() {
     const location = useLocation();
@@ -42,13 +45,33 @@ function QuizView() {
         hard: 0,
     });
 
-    const handleDifficulty = (level) => {
+    const handleDifficulty = async (level) => {
         const updatedCounts = {
             ...difficultyCounts,
             [level]: difficultyCounts[level] + 1,
         };
 
         setDifficultyCounts(updatedCounts);
+
+        const auth = getAuth();
+        const user = auth.currentUser;
+
+        if (user && currentQuestion?.id) {
+            const ratingDocId = `${user.uid}_${currentQuestion.id}`;
+            const ratingRef = doc(collection(db, "userRatings"), ratingDocId);
+
+            try {
+                await setDoc(ratingRef, {
+                    userId: user.uid,
+                    questionId: currentQuestion.id,
+                    rating: level,
+                    timestamp: new Date().toISOString(),
+                });
+                console.log("Rating saved:", level);
+            } catch (error) {
+                console.error("Error saving rating:", error);
+            }
+        }
 
         if (currentIndex < questions.length - 1) {
             handleNext();

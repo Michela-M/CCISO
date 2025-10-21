@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
 import { Box, Typography, CircularProgress } from "@mui/material";
 
 const LoadingPage = () => {
@@ -24,25 +25,49 @@ const LoadingPage = () => {
                 }
 
                 const quizDoc = snapshot.docs[0].data();
-                const fetchedQuestions = quizDoc.questions;
+                const allQuestions = quizDoc.questions;
 
+                const auth = getAuth();
+                const user = auth.currentUser;
+
+                let ratingsMap = {};
+                if (user) {
+                    ratingsMap = await fetchUserRatings(user.uid);
+                }
+
+                const weights = {
+                    hard: 3,
+                    good: 2,
+                    easy: 1,
+                };
+
+                // Build weighted pool
+                const weightedPool = [];
+                allQuestions.forEach((q) => {
+                    const rating = ratingsMap[q.id] || "good"; // default if unrated
+                    const weight = weights[rating];
+                    for (let i = 0; i < weight; i++) {
+                        weightedPool.push(q);
+                    }
+                });
+
+                // Shuffle and select
                 const shuffleArray = (array) => {
-                    const shuffled = [...array]; // copy array to avoid mutating original
+                    const shuffled = [...array];
                     for (let i = shuffled.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
-                        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // swap
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
                     }
                     return shuffled;
                 };
-                // Shuffle the questions
-                const questions = shuffleArray(fetchedQuestions);
 
-                console.log("Fetched questions:", questions);
+                const questions = shuffleArray(weightedPool).slice(0, 10);
 
-                // Simulate loading delay if needed
+                console.log("Personalized questions:", questions);
+
                 setTimeout(() => {
                     navigate("/question", { state: { questions } });
-                }, 2000); // 2 seconds delay
+                }, 2000);
             } catch (error) {
                 console.error("Error fetching quiz:", error);
             }
@@ -50,6 +75,22 @@ const LoadingPage = () => {
 
         fetchQuestions();
     }, [navigate]);
+
+    const fetchUserRatings = async (userId) => {
+        const ratingsSnapshot = await getDocs(
+            query(collection(db, "userRatings")),
+        );
+
+        const ratingsMap = {};
+        ratingsSnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.userId === userId) {
+                ratingsMap[data.questionId] = data.rating;
+            }
+        });
+
+        return ratingsMap;
+    };
 
     return (
         <Box
