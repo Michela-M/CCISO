@@ -80,6 +80,8 @@ const Home = () => {
                     alignItems: "center",
                     minHeight: "100vh",
                     gap: 2,
+                    textAlign: "center",
+                    px: 4,
                 }}
             >
                 <Typography variant="h5">
@@ -89,8 +91,22 @@ const Home = () => {
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                     Quisque tristique.
                 </Typography>
-                <Box display="flex" gap={2}>
-                    <Button variant="contained" onClick={handleStartQuiz}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: { xs: "column", sm: "row" },
+                        gap: 2,
+                        alignItems: "center",
+                        width: "100%",
+                    }}
+                >
+                    <Button
+                        variant="contained"
+                        onClick={handleStartQuiz}
+                        sx={{
+                            py: { xs: 1, sm: 1 },
+                        }}
+                    >
                         Start quiz
                     </Button>
                     {isAdmin && <CsvUploader />}
