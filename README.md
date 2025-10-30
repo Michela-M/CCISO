@@ -1,70 +1,47 @@
-# Getting Started with Create React App
+# 🛡️ CCISO
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An interactive quiz platform built with **React** to help users prepare for the **Certified Chief Information Security Officer (CCISO)** certification. Inspired by apps like **Enki**, this tool presents multiple-choice questions and lets users rate their difficulty—making learning both engaging and adaptive.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+- 🧠 **Quiz Engine**: Each question offers 4 answer choices. After confirming your answer, you rate how easy or hard the question was.
+- 📊 **Smart Question Frequency**: Questions rated as easier appear less often, while harder ones show up more frequently—tailoring the experience to your needs.
+- 🔥 **Firebase Integration**:
+  - **Authentication**: Optional login for saving your ratings.
+  - **Database**: Stores your question difficulty ratings.
+  - **Hosting**: Fast and reliable deployment.
+- 🎨 **Styling with MUI**: Clean, responsive design using Material UI components.
+- 🧪 **AI-Generated Questions**: All questions are generated with AI. While helpful, users should verify accuracy before relying on them.
 
-### `npm start`
+## 🛠️ Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+| Technology | Purpose |
+|------------|---------|
+| React      | Frontend UI |
+| Firebase   | Auth, Database, Hosting |
+| MUI        | Styling and UI Components |
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 📎 Live Demo
 
-### `npm test`
+Try it out here: quiz.michelamullins.com
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🧩 How It Works
 
-### `npm run build`
+1. Start a quiz session—no account required.
+2. Choose the correct answer from 4 options.
+3. Confirm your answer.
+4. Rate the question's difficulty.
+5. Your ratings are saved (if logged in) and influence future question frequency.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 📦 Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+git clone https://github.com/Michela-M/CCISO.git
+cd CCISO
+npm install
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This README was generated with AI. 🤖
