@@ -1,4 +1,5 @@
-// src/__mocks__/firebase.js
+import { vi } from "vitest";
+
 export const auth = {};
 export const db = {};
 
@@ -6,5 +7,3 @@ export const onAuthStateChanged = vi.fn();
 export const signOut = vi.fn();
 export const getDoc = vi.fn();
 export const doc = vi.fn();
-
-// src/setupTests.js
