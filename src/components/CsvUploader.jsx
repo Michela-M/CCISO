@@ -84,6 +84,9 @@ const CsvUploader = () => {
                 variant="outlined"
                 color="primary"
                 onClick={handleButtonClick}
+                sx={{
+                    py: 1,
+                }}
             >
                 Upload questions
             </Button>

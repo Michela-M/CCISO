@@ -53,7 +53,7 @@ const Login = () => {
                 width: "100%",
             }}
         >
-            <Card sx={{ width: 400 }}>
+            <Card sx={{ width: { xs: "90%", sm: "400px" }, mx: "auto" }}>
                 <CardContent
                     sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                 >

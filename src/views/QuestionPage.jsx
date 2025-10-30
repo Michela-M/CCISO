@@ -139,11 +139,18 @@ function QuizView() {
                     justifyContent: "center",
                     alignItems: "center",
                     minHeight: "80vh",
-                    width: "50%",
+                    width: { xs: "90%", sm: "80%", md: "60%", lg: "50%" },
                     margin: "0 auto",
                 }}
             >
-                <Typography variant="h4">{currentQuestion.question}</Typography>
+                <Typography
+                    sx={{
+                        fontSize: { xs: "1.25rem", sm: "2rem", md: "2.5rem" },
+                        fontWeight: "bold",
+                    }}
+                >
+                    {currentQuestion.question}
+                </Typography>
 
                 <Answers
                     currentQuestion={currentQuestion}

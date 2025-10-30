@@ -33,7 +33,7 @@ function Results() {
     };
 
     const options = {
-        cutout: "70%", // tighter ring
+        cutout: "60%", // tighter ring
         animation: false,
         plugins: {
             legend: {
@@ -56,7 +56,12 @@ function Results() {
                 width: "100%",
             }}
         >
-            <Card sx={{ minWidth: 600 }}>
+            <Card
+                sx={{
+                    mx: 2,
+                    width: { xs: "90%", sm: "80%", md: "600px" },
+                }}
+            >
                 <CardContent>
                     <Typography variant="h5">Quiz completed!</Typography>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
