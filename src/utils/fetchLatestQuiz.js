@@ -12,16 +12,10 @@ export const fetchLatestQuiz = async () => {
         const snapshot = await getDocs(q);
 
         if (snapshot.empty) {
-            console.log("No quizzes found!");
+            // TODO: Handle no quizzes found
             return;
         }
-
-        const quizDoc = snapshot.docs[0].data();
-        const fetchedQuestions = quizDoc.questions;
-        //setQuestions(fetchedQuestions); // store temporarily in state
-
-        console.log("Fetched Questions:", fetchedQuestions);
     } catch (error) {
-        console.error("Error fetching quiz:", error);
+        // TODO: Handle error appropriately
     }
 };

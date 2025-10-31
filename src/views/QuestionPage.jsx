@@ -67,8 +67,8 @@ function QuizView() {
                     rating: level,
                     timestamp: new Date().toISOString(),
                 });
-                console.log("Rating saved:", level);
             } catch (error) {
+                // eslint-disable-next-line no-console
                 console.error("Error saving rating:", error);
             }
         }
