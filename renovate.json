@@ -1,6 +1,14 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ]
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:base"],
+    "lockFileMaintenance": { "enabled": true },
+    "packageRules": [
+        {
+            "matchPackagePatterns": ["*"],
+            "postUpgradeTasks": {
+                "commands": ["npm install"],
+                "fileFilters": ["package-lock.json"]
+            }
+        }
+    ]
 }
