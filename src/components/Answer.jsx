@@ -9,9 +9,15 @@ const statusColors = {
 
 function Answer({ label, selected, status = "default", onClick }) {
     const getBackgroundColor = () => {
-        if (status === "success") return statusColors.success;
-        if (status === "error") return statusColors.error;
-        if (selected) return "#3F3F46"; // your custom selected color
+        if (status === "success") {
+            return statusColors.success;
+        }
+        if (status === "error") {
+            return statusColors.error;
+        }
+        if (selected) {
+            return "#3F3F46";
+        }
         return statusColors.default;
     };
 

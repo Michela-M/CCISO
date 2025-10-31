@@ -15,7 +15,9 @@ const CsvUploader = () => {
             .map((row) => {
                 const entries = Object.values(row);
 
-                if (entries.length < 6) return null;
+                if (entries.length < 6) {
+                    return null;
+                }
 
                 const [question, opt1, opt2, opt3, opt4, correctAnswerText] =
                     entries.map((entry) => entry.trim());
@@ -26,7 +28,9 @@ const CsvUploader = () => {
                         opt.toLowerCase() === correctAnswerText.toLowerCase(),
                 );
 
-                if (!question || correctAnswerIndex === -1) return null;
+                if (!question || correctAnswerIndex === -1) {
+                    return null;
+                }
 
                 return {
                     id: uuidv4(),
@@ -40,13 +44,13 @@ const CsvUploader = () => {
 
     const saveToFirestore = async (formattedQuestions) => {
         try {
-            const docRef = await addDoc(collection(db, "quizzes"), {
+            await addDoc(collection(db, "quizzes"), {
                 questions: formattedQuestions,
                 createdAt: new Date().toISOString(),
             });
-            console.log("Questions saved! Document ID:", docRef.id);
             alert("Questions uploaded successfully!");
         } catch (error) {
+            // eslint-disable-next-line no-console
             console.error("Error uploading to Firestore:", error);
             alert("Error uploading questions. Check the console.");
         }
@@ -54,17 +58,18 @@ const CsvUploader = () => {
 
     const handleFileUpload = (e) => {
         const file = e.target.files[0];
-        if (!file) return;
+        if (!file) {
+            return;
+        }
 
         Papa.parse(file, {
             header: false,
             skipEmptyLines: true,
             complete: (results) => {
                 const formatted = formatQuestions(results.data);
-                console.log("✅ Formatted Questions:", formatted);
                 saveToFirestore(formatted);
             },
-            error: (err) => console.error("Error parsing CSV:", err),
+            error: (err) => console.error("Error parsing CSV:", err), // eslint-disable-line no-console
         });
 
         e.target.value = "";

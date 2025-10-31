@@ -20,7 +20,7 @@ const LoadingPage = () => {
                 const snapshot = await getDocs(q);
 
                 if (snapshot.empty) {
-                    console.error("No quizzes found!");
+                    // TODO: Handle no quizzes found
                     return;
                 }
 
@@ -63,14 +63,12 @@ const LoadingPage = () => {
 
                 const questions = shuffleArray(weightedPool).slice(0, 10);
 
-                console.log("Personalized questions:", questions);
-
                 // Simulate loading delay if needed
                 setTimeout(() => {
                     navigate("/question", { state: { questions } });
                 }, 2000); // 2 seconds delay
             } catch (error) {
-                console.error("Error fetching quiz:", error);
+                // TODO: Handle error appropriately
             }
         };
 
