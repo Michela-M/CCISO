@@ -7,6 +7,11 @@
         "if npm ci; then echo \"Installed with npm ci\"; else echo \"npm ci failed — falling back to npm install\"; npm install; fi",
         "if npm ci; then npm run build; else echo \"npm ci failed — falling back to npm install\"; npm install; npm run build; fi"
     ],
+    "allowedCommands": [
+        "npm install",
+        "if npm ci; then echo \"Installed with npm ci\"; else echo \"npm ci failed — falling back to npm install\"; npm install; fi",
+        "if npm ci; then npm run build; else echo \"npm ci failed — falling back to npm install\"; npm install; npm run build; fi"
+    ],
     "packageRules": [
         {
             "matchPackagePatterns": ["*"],
