@@ -3,6 +3,7 @@
     "extends": ["config:base"],
     "lockFileMaintenance": { "enabled": true },
     "allowedPostUpgradeCommands": [
+        "npm install",
         "if npm ci; then echo \"Installed with npm ci\"; else echo \"npm ci failed — falling back to npm install\"; npm install; fi"
     ],
     "packageRules": [
