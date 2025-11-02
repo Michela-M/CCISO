@@ -2,12 +2,16 @@
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": ["config:base"],
     "lockFileMaintenance": { "enabled": true },
-    "allowedPostUpgradeCommands": ["npm install"],
+    "allowedPostUpgradeCommands": [
+        "if npm ci; then echo \"Installed with npm ci\"; else echo \"npm ci failed — falling back to npm install\"; npm install; fi"
+    ],
     "packageRules": [
         {
             "matchPackagePatterns": ["*"],
             "postUpgradeTasks": {
-                "commands": ["npm install"],
+                "commands": [
+                    "if npm ci; then echo \"Installed with npm ci\"; else echo \"npm ci failed — falling back to npm install\"; npm install; fi"
+                ],
                 "fileFilters": ["package-lock.json"]
             }
         }
