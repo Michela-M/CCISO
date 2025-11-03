@@ -10,6 +10,8 @@ import {
     Typography,
     Link,
     Stack,
+    InputAdornment,
+    IconButton,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { auth, googleProvider } from "../firebase";
@@ -18,6 +20,8 @@ import { db } from "../firebase";
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email format").required("Required"),
@@ -37,8 +41,17 @@ const Signup = () => {
     const [error, setError] = useState("");
     const [loadingGoogle, setLoadingGoogle] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const navigate = useNavigate();
+
+    const handleTogglePassword = () => {
+        setShowPassword(!showPassword);
+    };
+    const handleToggleConfirmPassword = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
 
     const formik = useFormik({
         initialValues: {
@@ -135,7 +148,7 @@ const Signup = () => {
                             name="password"
                             variant="outlined"
                             fullWidth
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             value={formik.values.password}
                             onChange={formik.handleChange}
                             error={
@@ -146,13 +159,29 @@ const Signup = () => {
                                 formik.touched.password &&
                                 formik.errors.password
                             }
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            onClick={handleTogglePassword}
+                                            edge="end"
+                                        >
+                                            {showPassword ? (
+                                                <VisibilityOffIcon />
+                                            ) : (
+                                                <VisibilityIcon />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
                         />
                         <TextField
                             label="Confirm password"
                             name="confirm"
                             variant="outlined"
                             fullWidth
-                            type="password"
+                            type={showConfirmPassword ? "text" : "password"}
                             value={formik.values.confirm}
                             onChange={formik.handleChange}
                             error={
@@ -162,6 +191,24 @@ const Signup = () => {
                             helperText={
                                 formik.touched.confirm && formik.errors.confirm
                             }
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            onClick={
+                                                handleToggleConfirmPassword
+                                            }
+                                            edge="end"
+                                        >
+                                            {showConfirmPassword ? (
+                                                <VisibilityOffIcon />
+                                            ) : (
+                                                <VisibilityIcon />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
                         />
                         {error && (
                             <Typography color="error" variant="body2">
