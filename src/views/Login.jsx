@@ -23,11 +23,9 @@ const validationSchema = Yup.object({
 });
 
 const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
     const [loadingGoogle, setLoadingGoogle] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -50,7 +48,7 @@ const Login = () => {
                     state: { message: "🎉 Logged in successfully!" },
                 });
             } catch (error) {
-                switch (code) {
+                switch (error.code) {
                     case "auth/wrong-password":
                         return "Invalid email or password. Please try again.";
                     case "auth/user-not-found":
@@ -151,7 +149,12 @@ const Login = () => {
                             gap: 1,
                         }}
                     >
-                        <Button variant="contained" fullWidth type="submit">
+                        <Button
+                            variant="contained"
+                            fullWidth
+                            type="submit"
+                            loading={loading}
+                        >
                             Log in
                         </Button>
                         <Button

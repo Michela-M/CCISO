@@ -35,6 +35,8 @@ const validationSchema = Yup.object({
 
 const Signup = () => {
     const [error, setError] = useState("");
+    const [loadingGoogle, setLoadingGoogle] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -46,6 +48,7 @@ const Signup = () => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
+            setLoading(true);
             setError("");
             if (values.password !== values.confirm) {
                 setError("Passwords do not match");
@@ -81,6 +84,8 @@ const Signup = () => {
     });
 
     const handleGoogleSignup = async () => {
+        setLoadingGoogle(true);
+        setError("");
         try {
             await signInWithPopup(auth, googleProvider);
             navigate("/", {
@@ -176,7 +181,12 @@ const Signup = () => {
                             gap: 1,
                         }}
                     >
-                        <Button variant="contained" fullWidth type="submit">
+                        <Button
+                            variant="contained"
+                            fullWidth
+                            type="submit"
+                            loading={loading}
+                        >
                             Sign up
                         </Button>
                         <Button
@@ -184,6 +194,7 @@ const Signup = () => {
                             fullWidth
                             startIcon={<GoogleIcon />}
                             onClick={handleGoogleSignup}
+                            loading={loadingGoogle}
                         >
                             Sign up with Google
                         </Button>
