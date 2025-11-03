@@ -7,6 +7,7 @@ import Results from "./views/Results";
 import LoadingScreen from "./views/LoadingScreen";
 import Login from "./views/Login";
 import Signup from "./views/Signup";
+import ForgotPassword from "./views/ForgotPassword";
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                 <Route path="/loading" element={<LoadingScreen />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
             </Routes>
         </Router>
     );

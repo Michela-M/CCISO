@@ -13,6 +13,7 @@ import {
     InputAdornment,
     IconButton,
 } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 import GoogleIcon from "@mui/icons-material/Google";
 import { auth, googleProvider } from "../firebase";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
@@ -163,7 +164,13 @@ const Login = () => {
                         <Box
                             sx={{ display: "flex", justifyContent: "flex-end" }}
                         >
-                            <Link>Forgot password?</Link>
+                            <Link
+                                component={RouterLink}
+                                to="/forgot-password"
+                                underline="hover"
+                            >
+                                Forgot password?
+                            </Link>
                         </Box>
                     </Stack>
 
