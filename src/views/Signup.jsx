@@ -10,64 +10,82 @@ import {
     Typography,
     Link,
     Stack,
-    Snackbar,
-    Alert,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { auth, googleProvider } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object({
+    email: Yup.string().email("Invalid email format").required("Required"),
+    password: Yup.string()
+        .min(8, "Password must be at least 8 characters")
+        .matches(
+            /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]/,
+            "Password must contain at least one letter and one number",
+        )
+        .required("Required"),
+    confirm: Yup.string()
+        .oneOf([Yup.ref("password"), null], "Passwords must match")
+        .required("Required"),
+});
 
 const Signup = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirm, setConfirm] = useState("");
     const [error, setError] = useState("");
 
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
     const navigate = useNavigate();
 
-    const handleSignup = async () => {
-        setError("");
-        if (password !== confirm) {
-            setError("Passwords do not match");
-            return;
-        }
-        try {
-            const userCredential = await createUserWithEmailAndPassword(
-                auth,
-                email,
-                password,
-            );
-            const user = userCredential.user;
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+            password: "",
+            confirm: "",
+        },
+        validationSchema: validationSchema,
+        onSubmit: async (values) => {
+            setError("");
+            if (values.password !== values.confirm) {
+                setError("Passwords do not match");
+                return;
+            }
+            try {
+                const userCredential = await createUserWithEmailAndPassword(
+                    auth,
+                    values.email,
+                    values.password,
+                );
+                const user = userCredential.user;
 
-            // Create Firestore user document
-            await setDoc(doc(db, "users", user.uid), {
-                email: user.email,
-                role: "user", // manually change to "admin" in Firebase Console if needed
-            });
+                // Create Firestore user document
+                await setDoc(doc(db, "users", user.uid), {
+                    email: user.email,
+                    role: "user", // manually change to "admin" in Firebase Console if needed
+                });
 
-            // Show success and navigate
-            setSnackbarMessage("🎉 Account created successfully!");
-            setSnackbarOpen(true);
-            setTimeout(() => {
-                navigate("/");
-            }, 2000);
-        } catch (err) {
-            setError(err.message);
-        }
-    };
+                navigate("/", {
+                    state: { message: "🎉 Account created successfully!" },
+                });
+            } catch (error) {
+                switch (error.code) {
+                    case "auth/email-already-in-use":
+                        setError("Email is already in use");
+                        break;
+                    default:
+                        setError(error.message);
+                }
+            }
+        },
+    });
 
     const handleGoogleSignup = async () => {
         try {
             await signInWithPopup(auth, googleProvider);
-            setSnackbarMessage("Signed up with Google!");
-            setSnackbarOpen(true);
-            setTimeout(() => {
-                navigate("/");
-            }, 2000); // Delay to let snackbar show before redirect
+            navigate("/", {
+                state: { message: "🎉 Account created successfully!" },
+            });
         } catch (err) {
             setError(err.message);
         }
@@ -83,6 +101,8 @@ const Signup = () => {
                 minHeight: "100vh",
                 width: "100%",
             }}
+            component="form"
+            onSubmit={formik.handleSubmit}
         >
             <Card sx={{ width: { xs: "90%", sm: "400px" }, mx: "auto" }}>
                 <CardContent
@@ -92,36 +112,61 @@ const Signup = () => {
                     <Stack spacing={1}>
                         <TextField
                             label="Email"
+                            name="email"
                             variant="outlined"
                             fullWidth
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            error={
+                                formik.touched.email &&
+                                Boolean(formik.errors.email)
+                            }
+                            helperText={
+                                formik.touched.email && formik.errors.email
+                            }
                         />
                         <TextField
                             label="Password"
+                            name="password"
                             variant="outlined"
                             fullWidth
                             type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            value={formik.values.password}
+                            onChange={formik.handleChange}
+                            error={
+                                formik.touched.password &&
+                                Boolean(formik.errors.password)
+                            }
+                            helperText={
+                                formik.touched.password &&
+                                formik.errors.password
+                            }
                         />
                         <TextField
                             label="Confirm password"
+                            name="confirm"
                             variant="outlined"
                             fullWidth
                             type="password"
-                            value={confirm}
-                            onChange={(e) => setConfirm(e.target.value)}
+                            value={formik.values.confirm}
+                            onChange={formik.handleChange}
+                            error={
+                                formik.touched.confirm &&
+                                Boolean(formik.errors.confirm)
+                            }
+                            helperText={
+                                formik.touched.confirm && formik.errors.confirm
+                            }
                         />
                         {error && (
                             <Typography color="error" variant="body2">
                                 {error}
                             </Typography>
                         )}
-                        {/*<Typography variant="caption">
-                            Password must be at least 8 characters long and
-                            contain a letter and a number.
-                        </Typography>*/}
+                        <Typography variant="caption">
+                            Your password must be at least 8 characters long and
+                            include a letter, a number, and a symbol.
+                        </Typography>
                     </Stack>
 
                     <Box
@@ -131,11 +176,7 @@ const Signup = () => {
                             gap: 1,
                         }}
                     >
-                        <Button
-                            variant="contained"
-                            fullWidth
-                            onClick={handleSignup}
-                        >
+                        <Button variant="contained" fullWidth type="submit">
                             Sign up
                         </Button>
                         <Button
@@ -152,21 +193,6 @@ const Signup = () => {
                     </Box>
                 </CardContent>
             </Card>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={3000}
-                onClose={() => setSnackbarOpen(false)}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            >
-                <Alert
-                    onClose={() => setSnackbarOpen(false)}
-                    severity="success"
-                    sx={{ width: "100%" }}
-                    variant="filled"
-                >
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
         </Box>
     );
 };

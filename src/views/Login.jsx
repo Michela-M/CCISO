@@ -14,29 +14,68 @@ import {
 import GoogleIcon from "@mui/icons-material/Google";
 import { auth, googleProvider } from "../firebase";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object({
+    email: Yup.string().email("Invalid email format").required("Required"),
+    password: Yup.string().required("Required"),
+});
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [loadingGoogle, setLoadingGoogle] = useState(false);
 
     const navigate = useNavigate();
 
-    const handleLogin = async () => {
-        setError("");
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-            navigate("/");
-        } catch (err) {
-            setError(err.message);
-        }
-    };
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+            password: "",
+        },
+        validationSchema: validationSchema,
+        onSubmit: async (values) => {
+            setLoading(true);
+            setError("");
+            try {
+                await signInWithEmailAndPassword(
+                    auth,
+                    values.email,
+                    values.password,
+                );
+                navigate("/", {
+                    state: { message: "🎉 Logged in successfully!" },
+                });
+            } catch (error) {
+                switch (code) {
+                    case "auth/wrong-password":
+                        return "Invalid email or password. Please try again.";
+                    case "auth/user-not-found":
+                        return "Invalid email or password. Please try again.";
+                    case "auth/invalid-email":
+                        return "Please enter a valid email address.";
+                    case "auth/too-many-requests":
+                        return "Too many attempts. Please wait a moment before trying again.";
+                    case "auth/network-request-failed":
+                        return "Network error. Please check your connection and try again.";
+                    case "auth/user-disabled":
+                        return "This account has been disabled. Contact support for help.";
+                    default:
+                        return "An unexpected error occurred. Please try again.";
+                }
+            }
+        },
+    });
 
     const handleGoogleLogin = async () => {
+        setLoadingGoogle(true);
         setError("");
         try {
             await signInWithPopup(auth, googleProvider);
-            navigate("/");
+            navigate("/", { state: { message: "🎉 Logged in successfully!" } });
         } catch (err) {
             setError(err.message);
         }
@@ -52,6 +91,8 @@ const Login = () => {
                 minHeight: "100vh",
                 width: "100%",
             }}
+            component="form"
+            onSubmit={formik.handleSubmit}
         >
             <Card sx={{ width: { xs: "90%", sm: "400px" }, mx: "auto" }}>
                 <CardContent
@@ -63,16 +104,33 @@ const Login = () => {
                             label="Email"
                             variant="outlined"
                             fullWidth
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            name="email"
+                            error={
+                                formik.touched.email &&
+                                Boolean(formik.errors.email)
+                            }
+                            helperText={
+                                formik.touched.email && formik.errors.email
+                            }
                         />
                         <TextField
                             label="Password"
                             variant="outlined"
                             fullWidth
                             type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            value={formik.values.password}
+                            onChange={formik.handleChange}
+                            name="password"
+                            error={
+                                formik.touched.password &&
+                                Boolean(formik.errors.password)
+                            }
+                            helperText={
+                                formik.touched.password &&
+                                formik.errors.password
+                            }
                         />
                         {error && (
                             <Typography color="error" variant="body2">
@@ -93,11 +151,7 @@ const Login = () => {
                             gap: 1,
                         }}
                     >
-                        <Button
-                            variant="contained"
-                            fullWidth
-                            onClick={handleLogin}
-                        >
+                        <Button variant="contained" fullWidth type="submit">
                             Log in
                         </Button>
                         <Button
@@ -105,6 +159,7 @@ const Login = () => {
                             fullWidth
                             startIcon={<GoogleIcon />}
                             onClick={handleGoogleLogin}
+                            loading={loadingGoogle}
                         >
                             Log in with Google
                         </Button>
