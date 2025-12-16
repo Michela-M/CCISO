@@ -58,6 +58,6 @@
         "firebase-tools": "^14.25.1",
         "jsdom": "^27.2.0",
         "prettier": "^3.6.2",
-        "vitest": "^4.0.10"
+        "vitest": "^4.0.16"
     }
 }
